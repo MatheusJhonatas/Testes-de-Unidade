@@ -1,8 +1,8 @@
 using System;
-using Flunt.Notifications;
+
 namespace Store.Domain.Entities;
 
-public class Entity : Notifiable//Notifiable é usado para notificar erros de validação
+public class Entity 
 {
     public Entity()
     {
