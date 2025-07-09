@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using Store.Domain.Enums;
+using Flunt.Notifications;
+// using Flunt.Validations;
 namespace Store.Domain.Entities;
 
-public class Order
+public class Order : Flunt.Notifications.Notifiable
 {
-    public Order(Costumer customer, decimal deliveryFee, Discount discount)
+    public Order(Customer customer, decimal deliveryFee, Discount discount)
     {
         AddNotifications(new Contract().Requires().IsNotNull(customer, "Customer", "Customer invalido"))
             .IsGreaterThan(deliveryFee, 0, "DeliveryFee", "Delivery fee must be greater than zero");
@@ -17,7 +19,7 @@ public class Order
         Discount = discount;
         Items = new List<OrderItem>();
     }
-    public Costumer Customer { get; private set; }
+    public Customer Customer { get; private set; }
     public DateTime Date { get; private set; }
     public string Number { get; private set; }
     public EOrderStatus Status { get; private set; }
@@ -47,11 +49,11 @@ public class Order
         total += DeliveryFee;
         if (Discount != null && Discount.IsValid())
         {
-            total -= Discount.Value() : 0;
+            total -= Discount.Value();
         }
         return total;
     }
-    public void Pay()
+    public void Pay(decimal amount )
     {
         if (amount == Total())
             this.Status = EOrderStatus.WaitingDelivery;

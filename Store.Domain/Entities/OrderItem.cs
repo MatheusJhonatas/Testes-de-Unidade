@@ -1,6 +1,10 @@
+using Flunt.Notifications;
+//using Flunt.Validations;
+using System;
+
 namespace Store.Domain.Entities;
 
-public class OrderItem : Entity
+public class OrderItem : Flunt.Notifications.Notifiable
 {
     public OrderItem(Product product, int quantity)
     {
