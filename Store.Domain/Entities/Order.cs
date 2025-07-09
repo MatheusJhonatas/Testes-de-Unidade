@@ -2,15 +2,17 @@ using System;
 using System.Collections.Generic;
 using Store.Domain.Enums;
 using Flunt.Notifications;
-// using Flunt.Validations;
+using Flunt.Validations;
 namespace Store.Domain.Entities;
 
-public class Order : Flunt.Notifications.Notifiable
+public class Order : Notifiable<Notification>
 {
     public Order(Customer customer, decimal deliveryFee, Discount discount)
     {
-        AddNotifications(new Contract().Requires().IsNotNull(customer, "Customer", "Customer invalido"))
-            .IsGreaterThan(deliveryFee, 0, "DeliveryFee", "Delivery fee must be greater than zero");
+        AddNotifications(new Contract<Notification>()
+            .Requires()
+            .IsNotNull(customer, "Customer", "Cliente inválido")
+            .IsGreaterThan(deliveryFee, 0, "DeliveryFee", "Delivery fee must be greater than zero"));
         Customer = customer;
         Date = DateTime.Now;
         Number = Guid.NewGuid().ToString().Substring(0, 8);
@@ -30,7 +32,7 @@ public class Order : Flunt.Notifications.Notifiable
     public void AddItem(Product product, int quantity)
     {
         var item = new OrderItem(product, quantity);
-        if(item.Valid)
+        if(item.IsValid)
         {
             Items.Add(item);
         }
