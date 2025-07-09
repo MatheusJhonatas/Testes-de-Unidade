@@ -7,6 +7,8 @@ public class Order
 {
     public Order(Costumer customer, decimal deliveryFee, Discount discount)
     {
+        AddNotifications(new Contract().Requires().IsNotNull(customer, "Customer", "Customer invalido"))
+            .IsGreaterThan(deliveryFee, 0, "DeliveryFee", "Delivery fee must be greater than zero");
         Customer = customer;
         Date = DateTime.Now;
         Number = Guid.NewGuid().ToString().Substring(0, 8);
@@ -26,7 +28,14 @@ public class Order
     public void AddItem(Product product, int quantity)
     {
         var item = new OrderItem(product, quantity);
-        Items.Add(item);
+        if(item.Valid)
+        {
+            Items.Add(item);
+        }
+        else
+        {
+            AddNotifications(item.Notifications);
+        }
     }
     public decimal Total()
     {
