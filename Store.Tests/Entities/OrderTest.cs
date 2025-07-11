@@ -4,6 +4,9 @@ namespace Store.Domain.Entities;
 [TestClass]
 public class OrderTest
 {
+    private readonly Customer _customer = new Customer("João da Silva", "joao@gmail.com");
+    private readonly Product _product = new Product("Produto 1", "Descrição do Produto 1", 10, true);
+    private readonly Discount _discount = new Discount("Desconto de Teste", 0.1m, DateTime.Now.AddDays(10));
     public void Dado_UmPedidoValido_DeveSerVálido()
     {
         // Arrange é onde você configura o cenário do teste
