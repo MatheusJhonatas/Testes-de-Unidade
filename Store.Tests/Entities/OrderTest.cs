@@ -35,4 +35,28 @@ public class OrderTest
         // Assert é onde você verifica se o resultado é o esperado, exemplo, se o status é "Aguardando Pagamento"
         Assert.AreEqual(EOrderStatus.WaitingPayment, status);
     }
+    [TestMethod]
+	public void Dado_UmPagamento_Status_DeveSerAguardandoEntrega()
+    {
+        // Arrange é onde você configura o cenário do teste
+        var order = new Order(_customer, 0, null);
+        order.Pay(order.Total());
+
+        // Act é onde você executa a ação que está sendo testada
+        var status = order.Status;
+
+        // Assert é onde você verifica se o resultado é o esperado, exemplo, se o status é "Aguardando Entrega"
+        Assert.AreEqual(EOrderStatus.WaitingDelivery, status);
+    }
+	[TestMethod]
+	public void Dado_UmPedido_Cancelamento_Pedido()
+	{
+		//Arrange é onde você configura o cenário do teste
+		var order = new Order(_customer, 0, null);
+		order.Cancel();
+		//Act é onde você executa a ação que está sendo testada
+		var status = order.Status;
+		//Assert é onde você verifica se o resultado é o esperado, exemplo, se o status é "Cancelado"
+		Assert.AreEqual(EOrderStatus.Canceled, status);
+	}
 }
