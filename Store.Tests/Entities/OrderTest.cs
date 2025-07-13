@@ -7,8 +7,8 @@ namespace Store.Domain.Entities;
 public class OrderTest
 {
     private readonly Customer _customer = new Customer("João da Silva", "joao@gmail.com");
-    private readonly Product _product = new Product("Produto 1", 8.5m, true);
-    private readonly Discount _discount = new Discount(0.1m, DateTime.Now.AddDays(10));
+    private readonly Product _product = new Product("Produto 1", 10, true);
+    private readonly Discount _discount = new Discount(10, DateTime.Now.AddDays(10));
     
     [TestMethod]
     public void Dado_um_novo_pedido_valido_numero_pedido_tem_8_caracteres()
@@ -79,4 +79,70 @@ public class OrderTest
 		//Assert é onde você verifica se o resultado é o esperado, exemplo, se o item não foi adicionado
 		Assert.AreEqual(order.Items.Count, 0);
 	}
+	[TestMethod]
+	public void Dado_um_novo_pedido_valido_seu_total_deve_ser_50()
+    {
+        // Arrange é onde você configura o cenário do teste
+        var order = new Order(_customer, 10, _discount);//-10 
+        order.AddItem(_product, 5);
+        // Act é onde você executa a ação que está sendo testada
+        var total = order.Total();
+        // Assert é onde você verifica se o resultado é o esperado, exemplo, se o total é 50
+        Assert.AreEqual(50, total);
+    }
+	[TestMethod]
+	public void Dado_um_desconto_expirado_o_valor_do_pedido_deve_ser_60()
+    {
+        // Arrange é onde você configura o cenário do teste
+		var discountExpired = new Discount(10, DateTime.Now.AddDays(-5));
+        var order = new Order(_customer, 10, discountExpired);
+        order.AddItem(_product, 5);
+        // Act é onde você executa a ação que está sendo testada
+        var total = order.Total();
+        // Assert é onde você verifica se o resultado é o esperado, exemplo, se o total é 60
+        Assert.AreEqual(60, total);
+    }
+	[TestMethod]
+	public void Dado_um_disconto_invalido_o_valor_do_pedido_deve_ser_60()
+    {
+        // Arrange é onde você configura o cenário do teste
+        var order = new Order(_customer, 10, null);
+        order.AddItem(_product, 5);
+        // Act é onde você executa a ação que está sendo testada
+        var total = order.Total();
+        // Assert é onde você verifica se o resultado é o esperado, exemplo, se o total é 60
+        Assert.AreEqual(60, total);
+    }
+	[TestMethod]
+	public void Dado_um_desconto_de_10_o_valor_do_pedido_deve_ser_50()
+    {
+        // Arrange é onde você configura o cenário do teste
+        var order = new Order(_customer, 10, _discount);
+        order.AddItem(_product, 5);
+        // Act é onde você executa a ação que está sendo testada
+        var total = order.Total();
+        // Assert é onde você verifica se o resultado é o esperado, exemplo, se o total é 50
+        Assert.AreEqual(50, total);
+    }
+	[TestMethod]
+	public void Dado_uma_taxa_de_entrega_de_10_o_valor_do_pedido_deve_ser_60()
+    {
+        // Arrange é onde você configura o cenário do teste
+        var order = new Order(_customer, 10, null);
+        order.AddItem(_product, 5);
+        // Act é onde você executa a ação que está sendo testada
+        var total = order.Total();
+        // Assert é onde você verifica se o resultado é o esperado, exemplo, se o total é 60
+        Assert.AreEqual(60, total);
+    }
+	[TestMethod]
+	public void Dado_um_pedido_sem_cliente_o_mesmo_deve_ser_invalido()
+    {
+        // Arrange é onde você configura o cenário do teste
+        var order = new Order(null, 10, null);
+        // Act é onde você executa a ação que está sendo testada
+        var isValid = order.IsValid;
+        // Assert é onde você verifica se o resultado é o esperado, exemplo, se o pedido é inválido
+        Assert.IsFalse(isValid);
+    }
 }
