@@ -128,10 +128,10 @@ public class OrderTest
 	public void Dado_uma_taxa_de_entrega_de_10_o_valor_do_pedido_deve_ser_60()
     {
         // Arrange é onde você configura o cenário do teste
-        var order = new Order(_customer, 10, null);
-        order.AddItem(_product, 5);
+        var order = new Order(_customer, 10, _discount);// 10 de taxa de entrega, _discount de 10 totalizando 0
+        order.AddItem(_product, 6); // 6 * 10 = 60
         // Act é onde você executa a ação que está sendo testada
-        var total = order.Total();
+        var total = order.Total();// 60 - 10 (desconto) + 10 (taxa de entrega) = 60
         // Assert é onde você verifica se o resultado é o esperado, exemplo, se o total é 60
         Assert.AreEqual(60, total);
     }
@@ -139,10 +139,10 @@ public class OrderTest
 	public void Dado_um_pedido_sem_cliente_o_mesmo_deve_ser_invalido()
     {
         // Arrange é onde você configura o cenário do teste
-        var order = new Order(null, 10, null);
+        var order = new Order(null, 10, null);// Cliente inválido, 10 de taxa de entrega, sem desconto
         // Act é onde você executa a ação que está sendo testada
-        var isValid = order.IsValid;
+        var isValid = order.IsValid;// Verifica se o pedido é válido
         // Assert é onde você verifica se o resultado é o esperado, exemplo, se o pedido é inválido
-        Assert.IsFalse(isValid);
+        Assert.IsFalse(isValid);// Pedido inválido, pois o cliente é nulo
     }
 }
